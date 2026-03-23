@@ -2,19 +2,24 @@ from itertools import permutations
 
 def tsp_brute_force(cost):
     n = len(cost)
-    cities = list(range(n))
-    min_cost = float('inf')
+    cities = list(range(1, n))  # kota selain kota awal (0)
+
+    best_cost = float('inf')
     best_route = None
 
-    for perm in permutations(cities[1:]):
-        route = [0] + list(perm) + [0]
-        current_cost = sum(cost[route[i]][route[i+1]] for i in range(n))
-        
-        if current_cost < min_cost:
-            min_cost = current_cost
+    # Coba semua permutasi kota (kecuali kota 0 sebagai titik awal)
+    for perm in permutations(cities):
+        route = [0] + list(perm) + [0]  # mulai dan kembali ke kota 0
+        total = 0
+
+        for i in range(len(route) - 1):
+            total += cost[route[i]][route[i+1]]
+
+        if total < best_cost:
+            best_cost = total
             best_route = route
 
-    return best_route, min_cost
+    return best_route, best_cost
 
 cost_matrix = [
     [0, 10, 15, 20],
